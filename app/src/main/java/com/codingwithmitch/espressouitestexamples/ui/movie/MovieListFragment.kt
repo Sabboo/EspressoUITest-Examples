@@ -12,21 +12,23 @@ import com.codingwithmitch.espressouitestexamples.R
 import com.codingwithmitch.espressouitestexamples.data.FakeMovieData.FAKE_NETWORK_DELAY
 import com.codingwithmitch.espressouitestexamples.data.Movie
 import com.codingwithmitch.espressouitestexamples.data.source.MoviesDataSource
+import com.codingwithmitch.espressouitestexamples.databinding.FragmentMovieListBinding
 import com.codingwithmitch.espressouitestexamples.ui.UICommunicationListener
 import com.codingwithmitch.espressouitestingexamples.util.EspressoIdlingResource
 import com.codingwithmitch.espressouitestexamples.util.TopSpacingItemDecoration
-import kotlinx.android.synthetic.main.fragment_movie_list.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import java.lang.ClassCastException
 
-class MovieListFragment(
-    val moviesDataSource: MoviesDataSource
-) : Fragment(),
-    MoviesListAdapter.Interaction
-{
+
+class MovieListFragment(val moviesDataSource: MoviesDataSource) : Fragment(),
+    MoviesListAdapter.Interaction {
+
     private val TAG: String = "AppDebug"
+
+    private var _binding: FragmentMovieListBinding? = null
+    private val binding get() = _binding!!
 
     override fun onItemSelected(position: Int, item: Movie) {
         activity?.run {
@@ -39,15 +41,16 @@ class MovieListFragment(
         }
     }
 
-    lateinit var listAdapter: MoviesListAdapter
+    private lateinit var listAdapter: MoviesListAdapter
     lateinit var uiCommunicationListener: UICommunicationListener
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_movie_list, container, false)
+    ): View {
+        _binding = FragmentMovieListBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -57,14 +60,15 @@ class MovieListFragment(
         getData()
     }
 
-    private fun getData(){
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun getData() {
         EspressoIdlingResource.increment()
         uiCommunicationListener.loading(true)
         val job = GlobalScope.launch(IO) {
             delay(FAKE_NETWORK_DELAY)
         }
-        job.invokeOnCompletion{
-            GlobalScope.launch(Main){
+        job.invokeOnCompletion {
+            GlobalScope.launch(Main) {
                 EspressoIdlingResource.decrement()
                 uiCommunicationListener.loading(false)
                 listAdapter.submitList(moviesDataSource.getMovies())
@@ -73,7 +77,7 @@ class MovieListFragment(
     }
 
     private fun initRecyclerView() {
-        recycler_view.apply {
+        binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)
             removeItemDecoration(TopSpacingItemDecoration(30))
             addItemDecoration(TopSpacingItemDecoration(30))
@@ -84,30 +88,10 @@ class MovieListFragment(
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        try{
+        try {
             uiCommunicationListener = context as UICommunicationListener
-        }catch (e: ClassCastException){
+        } catch (e: ClassCastException) {
             Log.e(TAG, "Must implement interface in $activity: ${e.message}")
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

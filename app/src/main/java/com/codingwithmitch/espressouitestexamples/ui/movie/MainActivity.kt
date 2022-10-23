@@ -7,19 +7,20 @@ import com.bumptech.glide.request.RequestOptions
 import com.codingwithmitch.espressouitestexamples.R
 import com.codingwithmitch.espressouitestexamples.data.source.MoviesDataSource
 import com.codingwithmitch.espressouitestexamples.data.source.MoviesRemoteDataSource
+import com.codingwithmitch.espressouitestexamples.databinding.ActivityMainBinding
 import com.codingwithmitch.espressouitestexamples.factory.MovieFragmentFactory
 import com.codingwithmitch.espressouitestexamples.ui.UICommunicationListener
-import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(),
-    UICommunicationListener
-{
+class MainActivity : AppCompatActivity(), UICommunicationListener {
+
+    private lateinit var binding: ActivityMainBinding
+
 
     override fun loading(isLoading: Boolean) {
         if (isLoading)
-            progress_bar.visibility = View.VISIBLE
+            binding.progressBar.visibility = View.VISIBLE
         else
-            progress_bar.visibility = View.INVISIBLE
+            binding.progressBar.visibility = View.INVISIBLE
     }
 
     // dependencies (typically would be injected with dagger)
@@ -31,34 +32,36 @@ class MainActivity : AppCompatActivity(),
         supportFragmentManager.fragmentFactory = MovieFragmentFactory(
             requestOptions,
             moviesDataSource
-            )
+        )
+
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
         init()
     }
 
-    private fun init(){
-        if(supportFragmentManager.fragments.size == 0){
+    private fun init() {
+        if (supportFragmentManager.fragments.size == 0) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.container, MovieListFragment::class.java, null)
                 .commit()
         }
     }
 
-    private fun initDependencies(){
-        if(!::requestOptions.isInitialized){
+    private fun initDependencies() {
+        if (!::requestOptions.isInitialized) {
             // glide
             requestOptions = RequestOptions
                 .placeholderOf(R.drawable.default_image)
                 .error(R.drawable.default_image)
         }
-        if(!::moviesDataSource.isInitialized){
+        if (!::moviesDataSource.isInitialized) {
             // Data Source
             moviesDataSource = MoviesRemoteDataSource()
         }
     }
-
 
 
 }

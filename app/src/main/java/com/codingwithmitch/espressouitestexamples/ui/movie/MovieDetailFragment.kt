@@ -10,14 +10,17 @@ import com.bumptech.glide.request.RequestOptions
 import com.codingwithmitch.espressouitestexamples.R
 import com.codingwithmitch.espressouitestexamples.data.Movie
 import com.codingwithmitch.espressouitestexamples.data.source.MoviesDataSource
-import kotlinx.android.synthetic.main.fragment_movie_detail.*
+import com.codingwithmitch.espressouitestexamples.databinding.FragmentMovieDetailBinding
 
 
 class MovieDetailFragment
 constructor(
     val requestOptions: RequestOptions,
     val moviesDataSource: MoviesDataSource
-): Fragment(){
+) : Fragment() {
+
+    private var _binding: FragmentMovieDetailBinding? = null
+    private val binding get() = _binding!!
 
     private val TAG: String = "AppDebug"
 
@@ -26,8 +29,8 @@ constructor(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let { args ->
-            args.getInt("movie_id").let{ movieId ->
-                moviesDataSource.getMovie(movieId)?.let{ movieFromRemote ->
+            args.getInt("movie_id").let { movieId ->
+                moviesDataSource.getMovie(movieId)?.let { movieFromRemote ->
                     movie = movieFromRemote
                 }
             }
@@ -37,8 +40,9 @@ constructor(
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_movie_detail, container, false)
+    ): View {
+        _binding = FragmentMovieDetailBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -46,7 +50,7 @@ constructor(
 
         setMovieDetails()
 
-        movie_directiors.setOnClickListener {
+        binding.movieDirectiors.setOnClickListener {
             val bundle = Bundle()
             bundle.putStringArrayList("args_directors", movie.directors)
             activity?.supportFragmentManager?.beginTransaction()
@@ -55,7 +59,7 @@ constructor(
                 ?.commit()
         }
 
-        movie_star_actors.setOnClickListener {
+        binding.movieStarActors.setOnClickListener {
             val bundle = Bundle()
             bundle.putStringArrayList("args_actors", movie.star_actors)
             activity?.supportFragmentManager?.beginTransaction()
@@ -65,13 +69,13 @@ constructor(
         }
     }
 
-    private fun setMovieDetails(){
+    private fun setMovieDetails() {
         Glide.with(this@MovieDetailFragment)
             .applyDefaultRequestOptions(requestOptions)
             .load(movie.image)
-            .into(movie_image)
-        movie_title.text = movie.title
-        movie_description.text = movie.description
+            .into(binding.movieImage)
+        binding.movieTitleFragmentDetails.text = movie.title
+        binding.movieDescription.text = movie.description
     }
 
 }

@@ -4,18 +4,19 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.Glide
 import com.codingwithmitch.espressouitestexamples.R
 import com.codingwithmitch.espressouitestexamples.data.Movie
 import com.codingwithmitch.espressouitestingexamples.util.EspressoIdlingResource
-import kotlinx.android.synthetic.main.layout_movie_list_item.view.*
+
 
 class MoviesListAdapter(private val interaction: Interaction? = null) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Movie>() {
+    private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Movie>() {
 
         override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
             return oldItem.id == newItem.id
@@ -44,7 +45,7 @@ class MoviesListAdapter(private val interaction: Interaction? = null) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is MovieViewHolder -> {
-                holder.bind(differ.currentList.get(position))
+                holder.bind(differ.currentList[position])
             }
         }
     }
@@ -69,19 +70,19 @@ class MoviesListAdapter(private val interaction: Interaction? = null) :
 
         fun bind(item: Movie) = with(itemView) {
             itemView.setOnClickListener {
-                interaction?.onItemSelected(adapterPosition, item)
+                interaction?.onItemSelected(bindingAdapterPosition, item)
             }
-            movie_title.text = item.title
+            itemView.findViewById<TextView>(R.id.movie_title).text = item.title
             Glide.with(itemView)
                 .load(item.image)
-                .into(movie_image)
+                .into(itemView.findViewById(R.id.movie_image))
             item.star_actors?.let {
-                for(index in 0 until it.size){
+                for (index in 0 until it.size) {
                     var appendValue: String = it[index]
-                    if(index < (it.size - 1)){
+                    if (index < (it.size - 1)) {
                         appendValue += ", "
                     }
-                    movie_star_actors.append(appendValue)
+                    itemView.findViewById<TextView>(R.id.movie_star_actors).append(appendValue)
                 }
             }
         }

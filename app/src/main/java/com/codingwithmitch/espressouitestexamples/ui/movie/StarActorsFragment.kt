@@ -5,18 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.codingwithmitch.espressouitestexamples.R
-import kotlinx.android.synthetic.main.fragment_star_actors.*
+import com.codingwithmitch.espressouitestexamples.databinding.FragmentStarActorsBinding
 import java.lang.StringBuilder
 
-class StarActorsFragment : Fragment(){
+class StarActorsFragment : Fragment() {
+
+    private var _binding: FragmentStarActorsBinding? = null
+    private val binding get() = _binding!!
 
     private val starActors: ArrayList<String> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let { args ->
-            starActors.addAll(args.get("args_actors") as List<String>)
+            starActors.addAll(args.getStringArrayList("args_actors") as List<String>)
         }
     }
 
@@ -24,8 +26,9 @@ class StarActorsFragment : Fragment(){
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_star_actors, container, false)
+    ): View {
+        _binding = FragmentStarActorsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -34,14 +37,14 @@ class StarActorsFragment : Fragment(){
         setActors()
     }
 
-    private fun setActors(){
-        star_actors_text.text = stringBuilderForStarActors(starActors)
+    private fun setActors() {
+        binding.starActorsText.text = stringBuilderForStarActors(starActors)
     }
 
-    companion object{
-        fun stringBuilderForStarActors(actors: ArrayList<String>): String{
+    companion object {
+        fun stringBuilderForStarActors(actors: ArrayList<String>): String {
             val sb = StringBuilder()
-            for(actor in actors){
+            for (actor in actors) {
                 sb.append(actor + "\n")
             }
             return sb.toString()
