@@ -56,12 +56,12 @@ class MovieDetailFragmentTest{
         )
 
         // VERIFY
-        onView(withId(R.id.movie_title)).check(matches(withText(title)))
+        onView(withId(R.id.movie_title_fragment_details)).check(matches(withText(title)))
 
         onView(withId(R.id.movie_description)).check(matches(withText(description)))
 
         // VERIFY nothing has changed
-        onView(withId(R.id.movie_title)).check(matches(withText(title)))
+        onView(withId(R.id.movie_title_fragment_details)).check(matches(withText(title)))
 
         onView(withId(R.id.movie_description)).check(matches(withText(description)))
     }
@@ -106,7 +106,7 @@ class MovieDetailFragmentTest{
         )
 
         // VERIFY
-        onView(withId(R.id.movie_title)).check(matches(withText(title)))
+        onView(withId(R.id.movie_title_fragment_details)).check(matches(withText(title)))
 
         onView(withId(R.id.movie_description)).check(matches(withText(description)))
 

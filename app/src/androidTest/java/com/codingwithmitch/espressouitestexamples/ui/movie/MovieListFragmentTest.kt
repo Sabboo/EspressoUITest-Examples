@@ -46,7 +46,7 @@ class MovieListFragmentTest{
             .perform(actionOnItemAtPosition<MovieViewHolder>(LIST_ITEM_IN_TEST, click()))
 
         // Confirm nav to DetailFragment and display title
-        onView(withId(R.id.movie_title)).check(matches(withText(MOVIE_IN_TEST.title)))
+        onView(withId(R.id.movie_title_fragment_details)).check(matches(withText(MOVIE_IN_TEST.title)))
     }
 
     @Test
@@ -57,7 +57,7 @@ class MovieListFragmentTest{
             .perform(actionOnItemAtPosition<MovieViewHolder>(LIST_ITEM_IN_TEST, click()))
 
         // Confirm nav to DetailFragment and display title
-        onView(withId(R.id.movie_title)).check(matches(withText(MOVIE_IN_TEST.title)))
+        onView(withId(R.id.movie_title_fragment_details)).check(matches(withText(MOVIE_IN_TEST.title)))
 
         pressBack()
 
@@ -73,7 +73,7 @@ class MovieListFragmentTest{
             .perform(actionOnItemAtPosition<MovieViewHolder>(LIST_ITEM_IN_TEST, click()))
 
         // Confirm nav to DetailFragment and display title
-        onView(withId(R.id.movie_title)).check(matches(withText(MOVIE_IN_TEST.title)))
+        onView(withId(R.id.movie_title_fragment_details)).check(matches(withText(MOVIE_IN_TEST.title)))
 
         // Nav to DirectorsFragment
         onView(withId(R.id.movie_directiors)).perform(click())
@@ -93,7 +93,7 @@ class MovieListFragmentTest{
             .perform(actionOnItemAtPosition<MovieViewHolder>(LIST_ITEM_IN_TEST, click()))
 
         // Confirm nav to DetailFragment and display title
-        onView(withId(R.id.movie_title)).check(matches(withText(MOVIE_IN_TEST.title)))
+        onView(withId(R.id.movie_title_fragment_details)).check(matches(withText(MOVIE_IN_TEST.title)))
 
         // Nav to DirectorsFragment
         onView(withId(R.id.movie_star_actors)).perform(click())
